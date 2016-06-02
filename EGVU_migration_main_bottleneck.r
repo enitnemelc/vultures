@@ -391,15 +391,21 @@ ggmap(MAP)+geom_tile(data=autumn_bottleneck_plot, aes(x=long,y=lat, fill = n_mig
 autumn<-autumn_bottleneck_plot[autumn_bottleneck_plot$n_mig>70,]
 spring<-spring_bottleneck_plot[spring_bottleneck_plot$n_mig>70,]
 season<-rbind(autumn,spring)
+#season<-merge(autumn, spring, by=c('lat','long'), all=T)
 
 ## combine the >50% migrations in both seasons
 ### THIS DOES NOT WORK BECAUSE THE GRIDS DO NOT MATCH - see lines 109 and 271 - you need to make 1 grid, 1 spdf etc. to use in both spring and autumn so that you can overlay them
 
 fifty_aut<-autumn_bottleneck_plot[autumn_bottleneck_plot$n_mig>50,]
 fifty_spr<-spring_bottleneck_plot[spring_bottleneck_plot$n_mig>50,]
-fifty<-merge(fifty_aut, fifty_spr, by=c('lat','long'), all=T)
+#fifty<-merge(fifty_aut, fifty_spr, by=c('lat','long'), all=T)
+fifty<-rbind(fifty_aut, fifty_spr)
 
-main_bottlenecks_plot<-merge(autumn, spring, by=c('lat','long'), all=T)
+#main_bottlenecks_plot<-merge(autumn, spring, by=c('lat','long'), all=T)
+main_bottlenecks_plot<-rbind(season, fifty)
+dim(main_bottlenecks_plot)
+main_bottlenecks_plot
+
 
 #### PLOT ####
 
