@@ -104,9 +104,14 @@ plot(EV_spring_trips,pch=16, cex=0.1, axes = TRUE)
 lines(EV_spring_trips)
 plot(countriesLow, add=T)
 
+### CREATE A TRIPS OBJECT FOR THE GRID FROM all_migdata ###
+EVSP_all <- SpatialPoints(data.frame(all_migdata$long, all_migdata$lat), proj4string=CRS("+proj=longlat + datum=wgs84"))		### these are the raw location data
+EVSP_all <- SpatialPointsDataFrame(EVSP_all, data = all_migdata)
+EV_all_trips<-trip(EVSP, TORnames=c("date","MigID"))			### switch to "DateTime" when using the raw locations
+
 
 ### CREATE A GRID AND COUNT NUMBER OF LOCATIONS IN EACH GRID CELL ###
-grd<-makeGridTopology(all_data, cellsize = c(100,100), adjust2longlat = TRUE)			### CREATE THIS USING all_migdata!
+grd<-makeGridTopology(EV_all_trips, cellsize = c(100,100), adjust2longlat = TRUE)			### CREATE THIS USING all_migdata!
 trg <- tripGrid(EV_spring_trips, grid=grd,method="pixellate")						### this will provide the number of bird seconds spent in each grid cell
 spplot(trg)			## plots the trips with a legend
 #image(trg)
