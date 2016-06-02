@@ -106,7 +106,7 @@ plot(countriesLow, add=T)
 
 
 ### CREATE A GRID AND COUNT NUMBER OF LOCATIONS IN EACH GRID CELL ###
-grd<-makeGridTopology(EV_spring_trips, cellsize = c(100,100), adjust2longlat = TRUE)			### CREATE THIS USING all_migdata!
+grd<-makeGridTopology(all_data, cellsize = c(100,100), adjust2longlat = TRUE)			### CREATE THIS USING all_migdata!
 trg <- tripGrid(EV_spring_trips, grid=grd,method="pixellate")						### this will provide the number of bird seconds spent in each grid cell
 spplot(trg)			## plots the trips with a legend
 #image(trg)
@@ -163,7 +163,7 @@ ggmap(MAP)+geom_tile(data=spring_poly_count, aes(x=long,y=lat, fill = time)) +
 
 ### OVERALL MAP -
 
-ras<- raster(spdf)		# converts the SpatialPixelDataFrame into a raster
+ras1<- raster(spdf)		# converts the SpatialPixelDataFrame into a raster
 spoldf <- rasterToPolygons(ras1, n=4) # converts the raster into quadratic polygons
 proj4string(spoldf)<-proj4string(EVSP)
 spring_migrations<-unique(spring_migdata$MigID)
@@ -382,12 +382,21 @@ ggmap(MAP)+geom_tile(data=autumn_bottleneck_plot, aes(x=long,y=lat, fill = n_mig
 
 
 #### DEFINE THE MOST IMPORTANT CELLS FOR EACH SEASON ###
-autumn<-autumn_bottleneck_plot[autumn_bottleneck_plot$n_mig>50,]
-spring<-spring_bottleneck_plot[spring_bottleneck_plot$n_mig>50,]
+
+autumn<-autumn_bottleneck_plot[autumn_bottleneck_plot$n_mig>70,]
+spring<-spring_bottleneck_plot[spring_bottleneck_plot$n_mig>70,]
+season<-rbind(autumn,spring)
 
 ## combine the >50% migrations in both seasons
 ### THIS DOES NOT WORK BECAUSE THE GRIDS DO NOT MATCH - see lines 109 and 271 - you need to make 1 grid, 1 spdf etc. to use in both spring and autumn so that you can overlay them
+
+fifty_aut<-autumn_bottleneck_plot[autumn_bottleneck_plot$n_mig>50,]
+fifty_spr<-spring_bottleneck_plot[spring_bottleneck_plot$n_mig>50,]
+fifty<-merge(fifty_aut, fifty_spr, by=c('lat','long'), all=T)
+
 main_bottlenecks_plot<-merge(autumn, spring, by=c('lat','long'), all=T)
+
+#### PLOT ####
 
 ggmap(MAP)+geom_tile(data=main_bottlenecks_plot, aes(x=long,y=lat, fill = n_mig)) +
 	scale_fill_gradient(name = '% of all autumn migrations', low="white", high="red", na.value = 'white', guide = "colourbar", limits=c(25, 75))+ 
