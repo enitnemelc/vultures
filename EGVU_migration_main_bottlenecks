@@ -424,6 +424,8 @@ bottlenecks<-bottlenecks[c(3,5,16,20),]
 #### CALCULATE THE WEIGHTED MEAN OF THE % OF MIGRATIONS IN EACH SELECTED CELL ####
 
 bottlenecks$mean_mig<-lapply(bottlenecks,weighted.mean(x=c(bottlenecks$n_mig_autumn,bottlenecks$n_mig_spring),w=c(19,13), na.rm=TRUE))
+#OR
+apply(bottlenecks,1,weighted.mean(x=c(bottlenecks$n_mig_autumn[1],bottlenecks$n_mig_spring[1]),w=c(19,13), na.rm=TRUE))
 
 #bottlenecks$mean_mig<-weighted.mean(c(main_bottlenecks_plot$n_mig_autumn[1],main_bottlenecks_plot$n_mig_spring[1]),w=c(19,13), na.rm=TRUE)
 #bottlenecks$mean_mig<-weighted.mean(c(main_bottlenecks_plot$n_mig_autumn),w=c(19), na.rm=TRUE)
