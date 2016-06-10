@@ -415,8 +415,6 @@ names(fifty)
 fifty
 
 bottlenecks<-fifty[(fifty$n_mig_autumn>50 & fifty$n_mig_spring>50),]				### Select the cells with >50% of migrations in BOTH seasons
-#bottlenecks<-main_bottlenecks_plot[!is.na(main_bottlenecks_plot)]
-#main_bottlenecks_plot_2
 bottlenecks
 
 #### DELETE THE ROWS WITH NA VALUES ####
